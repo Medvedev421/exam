@@ -26,21 +26,19 @@ class TicketController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'title'   => 'required|string|max:255',
+            'subject' => 'required|string|max:255',
             'message' => 'required|string',
         ]);
 
-        $ticket = Ticket::create([
+        Ticket::create([
             'user_id' => Auth::id(),
-            'title'   => $data['title'],
+            'subject' => $data['subject'],
             'message' => $data['message'],
-            'status'  => 'open',
+            'status'  => 'new',
         ]);
 
-        // 🔥 EVENT
-        event(new TicketCreated($ticket));
-
-        return redirect()->route('tickets.index')
+        return redirect()
+            ->route('tickets.index')
             ->with('success', 'Обращение создано');
     }
 

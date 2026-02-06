@@ -28,8 +28,9 @@
             @method('PATCH')
 
             <select name="status" class="form-select w-auto">
-                <option value="open" @selected($ticket->status === 'open')>open</option>
-                <option value="closed" @selected($ticket->status === 'closed')>closed</option>
+                <option value="new" @selected($ticket->status === 'new')>Новое</option>
+                <option value="in_work" @selected($ticket->status === 'in_work')>В работе</option>
+                <option value="done" @selected($ticket->status === 'done')>Завершено</option>
             </select>
 
             <button class="btn btn-primary">

@@ -11,7 +11,7 @@ class Ticket extends Model
 
     protected $fillable = [
         'user_id',
-        'title',
+        'subject',
         'message',
         'status',
     ];
@@ -19,5 +19,15 @@ class Ticket extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function getStatusLabelAttribute()
+    {
+        return match ($this->status) {
+            'new'     => 'Новое',
+            'in_work' => 'В работе',
+            'done'    => 'Завершено',
+            default   => '—',
+        };
     }
 }

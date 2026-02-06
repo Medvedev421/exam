@@ -1,47 +1,39 @@
 @extends('layouts.app')
 
-@section('title', 'Админка — обращения')
+@section('title', 'Мои обращения')
 
 @section('content')
     <div class="container mt-4">
 
-        <h2 class="mb-4">Все обращения</h2>
-
-        <div class="table-responsive">
-            <table class="table table-bordered align-middle">
-                <thead class="table-light">
-                <tr>
-                    <th>ID</th>
-                    <th>Пользователь</th>
-                    <th>Тема</th>
-                    <th>Статус</th>
-                    <th>Создано</th>
-                    <th></th>
-                </tr>
-                </thead>
-                <tbody>
-                @foreach($tickets as $ticket)
-                    <tr>
-                        <td>{{ $ticket->id }}</td>
-                        <td>{{ $ticket->user->email }}</td>
-                        <td>{{ $ticket->subject }}</td>
-                        <td>
-                        <span class="badge {{ $ticket->status === 'open' ? 'bg-primary' : 'bg-success' }}">
-                            {{ $ticket->status }}
-                        </span>
-                        </td>
-                        <td>{{ $ticket->created_at->format('d.m.Y') }}</td>
-                        <td>
-                            <a href="{{ route('admin.tickets.show', $ticket) }}"
-                               class="btn btn-sm btn-outline-secondary">
-                                Открыть
-                            </a>
-                        </td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4>Мои обращения</h4>
+            <a href="{{ route('tickets.create') }}" class="btn btn-primary">
+                Создать обращение
+            </a>
         </div>
+
+        @if($tickets->isEmpty())
+            <div class="alert alert-secondary">
+                У вас пока нет обращений
+            </div>
+        @else
+            <div class="list-group">
+                @foreach($tickets as $ticket)
+                    <a href="{{ route('tickets.show', $ticket) }}"
+                       class="list-group-item list-group-item-action">
+                        <div class="d-flex justify-content-between">
+                            <strong>{{ $ticket->title }}</strong>
+                            <span class="badge bg-secondary">
+                            {{ $ticket->status_label }}
+                        </span>
+                        </div>
+                        <small class="text-muted">
+                            {{ $ticket->created_at->format('d.m.Y H:i') }}
+                        </small>
+                    </a>
+                @endforeach
+            </div>
+        @endif
 
     </div>
 @endsection

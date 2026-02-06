@@ -40,8 +40,13 @@
                             <td>{{ $ticket->id }}</td>
                             <td>{{ $ticket->subject }}</td>
                             <td>
-                            <span class="badge {{ $ticket->status === 'open' ? 'bg-primary' : 'bg-success' }}">
-                                {{ $ticket->status }}
+                            <span class="badge
+                                @if($ticket->status === 'new') bg-primary
+                                @elseif($ticket->status === 'in_work') bg-warning
+                                @else bg-success
+                                @endif
+                            ">
+                                {{ $ticket->status_label }}
                             </span>
                             </td>
                             <td>{{ $ticket->created_at->format('d.m.Y') }}</td>
