@@ -15,9 +15,19 @@
 
         <div class="card mb-3">
             <div class="card-body">
-                <p><strong>Пользователь:</strong> {{ $ticket->user->email }}</p>
+                <p><strong>Email пользователя:</strong> {{ $ticket->user->email }}</p>
                 <p><strong>Тема:</strong> {{ $ticket->subject }}</p>
-                <p><strong>Статус:</strong> {{ $ticket->status }}</p>
+                <p>
+                    <strong>Статус:</strong>
+                    <span class="badge
+                        @if($ticket->status === 'new') bg-primary
+                        @elseif($ticket->status === 'in_work') bg-warning
+                        @else bg-success
+                        @endif
+                    ">
+                        {{ $ticket->status_label }}
+                    </span>
+                </p>
                 <hr>
                 <p>{{ $ticket->message }}</p>
             </div>

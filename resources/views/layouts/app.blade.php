@@ -15,24 +15,26 @@
             <ul class="navbar-nav ms-auto">
 
                 @auth
-                    @if(Route::has('tickets.index'))
+                    {{-- Мои обращения — ТОЛЬКО для обычных пользователей --}}
+                    @if(!auth()->user()->isAdmin())
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('tickets.index') }}">Мои обращения</a>
                         </li>
                     @endif
 
-                    @if(auth()->user()->isAdmin() && Route::has('admin.tickets.index'))
+                    {{-- Админка --}}
+                    @if(auth()->user()->isAdmin())
                         <li class="nav-item">
                             <a class="nav-link" href="{{ route('admin.tickets.index') }}">Админка</a>
                         </li>
                     @endif
 
-                    @if(Route::has('profile.edit'))
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('profile.edit') }}">Профиль</a>
-                        </li>
-                    @endif
+                    {{-- Профиль — ДЛЯ ВСЕХ авторизованных --}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('profile.edit') }}">Профиль</a>
+                    </li>
 
+                    {{-- Выход --}}
                     <li class="nav-item">
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -42,17 +44,12 @@
                 @endauth
 
                 @guest
-                    @if(Route::has('login'))
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">Log in</a>
-                        </li>
-                    @endif
-
-                    @if(Route::has('register'))
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ route('register') }}">Register</a>
-                        </li>
-                    @endif
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('login') }}">Log in</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('register') }}">Register</a>
+                    </li>
                 @endguest
 
             </ul>

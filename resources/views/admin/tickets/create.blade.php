@@ -30,9 +30,9 @@
                                 <label class="form-label">Тема обращения</label>
                                 <input
                                     type="text"
-                                    name="title"
+                                    name="subject"
                                     class="form-control"
-                                    value="{{ old('title') }}"
+                                    value="{{ old('subject') }}"
                                     required
                                 >
                             </div>
