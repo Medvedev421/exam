@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ticket;
-use App\Events\TicketCreated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -34,7 +33,7 @@ class TicketController extends Controller
             'user_id' => Auth::id(),
             'subject' => $data['subject'],
             'message' => $data['message'],
-            'status'  => 'new',
+            'status'  => 'open',
         ]);
 
         return redirect()
@@ -47,5 +46,16 @@ class TicketController extends Controller
         abort_if($ticket->user_id !== Auth::id(), 403);
 
         return view('tickets.show', compact('ticket'));
+    }
+
+    public function destroy(Ticket $ticket)
+    {
+        abort_if($ticket->user_id !== Auth::id(), 403);
+
+        $ticket->delete();
+
+        return redirect()
+            ->route('tickets.index')
+            ->with('success', 'Обращение удалено');
     }
 }

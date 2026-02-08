@@ -9,17 +9,19 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware('auth')->name('dashboard');
+Route::middleware('auth')->get('/dashboard', function () {
+    if (auth()->user()->isAdmin()) {
+        return redirect()->route('admin.tickets.index');
+    }
+
+    return redirect()->route('tickets.index');
+})->name('dashboard');
 
 Route::middleware('auth')->group(function () {
 
-    // Пользовательские обращения
     Route::resource('tickets', TicketController::class)
         ->only(['index', 'create', 'store', 'show']);
 
-    // Профиль
     Route::get('/profile', [ProfileController::class, 'edit'])
         ->name('profile.edit');
 
@@ -38,11 +40,17 @@ Route::middleware(['auth', 'admin'])
         Route::get('/tickets', [AdminTicketController::class, 'index'])
             ->name('tickets.index');
 
+        Route::get('/tickets/deleted', [AdminTicketController::class, 'deleted'])
+            ->name('tickets.deleted');
+
         Route::get('/tickets/{ticket}', [AdminTicketController::class, 'show'])
             ->name('tickets.show');
 
         Route::patch('/tickets/{ticket}/status', [AdminTicketController::class, 'updateStatus'])
             ->name('tickets.status');
+
+        Route::delete('/tickets/{ticket}', [AdminTicketController::class, 'destroy'])
+            ->name('tickets.destroy');
     });
 
 require __DIR__.'/auth.php';

@@ -9,11 +9,17 @@ return new class extends Migration {
     {
         Schema::create('tickets', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+
+            $table->foreignId('user_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
             $table->string('subject');
             $table->text('message');
-            $table->string('status')->default('open'); // open / closed
+            $table->string('status')->default('open');
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -7,6 +7,9 @@
 
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h2>Все обращения</h2>
+            <a href="{{ route('admin.tickets.deleted') }}" class="btn btn-outline-danger">
+                Удалённые
+            </a>
         </div>
 
         @if($tickets->isEmpty())
@@ -34,7 +37,7 @@
                             <td>{{ $ticket->user->email }}</td>
                             <td>
                                 <span class="badge
-                                    @if($ticket->status === 'new') bg-primary
+                                    @if($ticket->status === 'open') bg-primary
                                     @elseif($ticket->status === 'in_work') bg-warning
                                     @else bg-success
                                     @endif
@@ -43,11 +46,21 @@
                                 </span>
                             </td>
                             <td>{{ $ticket->created_at->format('d.m.Y') }}</td>
-                            <td>
+                            <td class="d-flex gap-2">
                                 <a href="{{ route('admin.tickets.show', $ticket) }}"
                                    class="btn btn-sm btn-outline-secondary">
                                     Открыть
                                 </a>
+
+                                <form method="POST"
+                                      action="{{ route('admin.tickets.destroy', $ticket) }}"
+                                      onsubmit="return confirm('Удалить обращение?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button class="btn btn-sm btn-outline-danger">
+                                        Удалить
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     @endforeach

@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Ticket extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'user_id',
@@ -16,18 +17,20 @@ class Ticket extends Model
         'status',
     ];
 
+    protected $dates = ['deleted_at'];
+
     public function user()
     {
         return $this->belongsTo(User::class);
     }
 
-    public function getStatusLabelAttribute()
+    public function getStatusLabelAttribute(): string
     {
         return match ($this->status) {
-            'new'     => 'Новое',
-            'in_work' => 'В работе',
-            'done'    => 'Завершено',
-            default   => '—',
+            'open'     => 'Новое',
+            'in_work'  => 'В работе',
+            'done'     => 'Завершено',
+            default    => '—',
         };
     }
 }

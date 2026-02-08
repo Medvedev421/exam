@@ -17,6 +17,16 @@ class AdminTicketController extends Controller
         return view('admin.tickets.index', compact('tickets'));
     }
 
+    public function deleted()
+    {
+        $tickets = Ticket::onlyTrashed()
+            ->with('user')
+            ->latest('deleted_at')
+            ->get();
+
+        return view('admin.tickets.deleted', compact('tickets'));
+    }
+
     public function show(Ticket $ticket)
     {
         return view('admin.tickets.show', compact('ticket'));
@@ -25,7 +35,7 @@ class AdminTicketController extends Controller
     public function updateStatus(Request $request, Ticket $ticket)
     {
         $request->validate([
-            'status' => 'required|in:new,in_work,done',
+            'status' => 'required|in:open,in_work,done',
         ]);
 
         $ticket->update([
@@ -33,5 +43,14 @@ class AdminTicketController extends Controller
         ]);
 
         return back()->with('success', 'Статус обновлён');
+    }
+
+    public function destroy(Ticket $ticket)
+    {
+        $ticket->delete();
+
+        return redirect()
+            ->route('admin.tickets.index')
+            ->with('success', 'Обращение удалено');
     }
 }
